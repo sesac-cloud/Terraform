@@ -1,4 +1,4 @@
-locals  {
+locals {
 
   use_az = [
     "${var.use_region}a",
@@ -19,8 +19,8 @@ locals {
 
 locals {
   containers = [
-    "backend" ,
-    "frontend" ,
+    "backend",
+    "frontend",
     "api"
   ]
 }
