@@ -32,7 +32,7 @@ resource "aws_security_group" "bastion_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags = resource_tags
+  tags = local.resource_tags
 }
 
 
@@ -54,6 +54,6 @@ resource "aws_instance" "instance_c" {
   root_block_device {
     volume_size = 8
   }
-  tags = resource_tags
+  tags = local.resource_tags
 }
 

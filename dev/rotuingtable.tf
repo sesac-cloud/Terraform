@@ -5,7 +5,7 @@ resource "aws_route_table" "bastion_route_table" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
-  tags = resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_route_table" "k8s_route_table" {
@@ -15,7 +15,7 @@ resource "aws_route_table" "k8s_route_table" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
   }
-  tags = resource_tags
+  tags = local.resource_tags
 }
 
 resource "aws_route_table" "db_route_table" {
@@ -25,7 +25,7 @@ resource "aws_route_table" "db_route_table" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
   }
-  tags = resource_tags
+  tags = local.resource_tags
 }
 
 #route_table_association

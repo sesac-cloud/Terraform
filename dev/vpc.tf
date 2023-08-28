@@ -44,7 +44,7 @@ resource "aws_subnet" "db_subnet" {
 #internet gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
-  tags   = resource_tags
+  tags   = local.resource_tags
 }
 
 
@@ -54,9 +54,9 @@ resource "aws_nat_gateway" "nat_gw" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.bastion_subnet[0].id
   depends_on    = [aws_internet_gateway.igw]
-  tags          = resource_tags
+  tags          = local.resource_tags
 }
 
 resource "aws_eip" "nat_eip" {
-  tags = resource_tags
+  tags = local.resource_tags
 }
