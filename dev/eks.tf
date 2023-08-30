@@ -50,7 +50,7 @@ resource "aws_eks_node_group" "eks_node_group" {
 
   subnet_ids = aws_subnet.k8s_subnet[*].id
 
-  instance_types = ["t3.micro"]
+  instance_types = ["t3.medium"]
 
   release_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
