@@ -15,8 +15,8 @@ resource "aws_security_group" "bastion_sg" {
 
   dynamic "ingress" {
     for_each = {
-      ovpn  = 1194
-     # ssh   = 22
+      ovpn = 1194
+      # ssh   = 22
       other = 943
       https = 443
     }
@@ -40,7 +40,7 @@ resource "aws_security_group" "bastion_sg" {
 
 
 resource "aws_instance" "instance_c" {
-  depends_on = [ aws_key_pair.keypair ]
+  depends_on = [aws_key_pair.keypair]
 
   ami           = data.aws_ami.ovpn.image_id
   subnet_id     = aws_subnet.bastion_subnet[0].id
@@ -67,5 +67,5 @@ EOF
 resource "aws_key_pair" "keypair" {
   key_name   = "${var.project_env}-key"
   public_key = var.keypair
-  tags = local.resource_tags
+  tags       = local.resource_tags
 }

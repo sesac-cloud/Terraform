@@ -43,7 +43,7 @@ resource "aws_mq_broker" "mq_borker" {
     username = var.mquser
     password = var.mqpw
   }
-    tags = local.resource_tags
+  tags = local.resource_tags
 
 }
 
