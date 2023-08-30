@@ -14,3 +14,4 @@ variable "mquser" {}
 variable "dbpw" {}
 variable "dbuser" {}
 variable "keypair" {}
+variable "oidcclient" {}
