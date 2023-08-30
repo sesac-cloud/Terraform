@@ -100,3 +100,17 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
   tags = local.resource_tags
 }
+
+# resource "aws_eks_identity_provider_config" "example" {
+#   cluster_name = aws_eks_cluster.eks_cluster.name
+
+#   oidc {
+#     client_id                     = "your client_id"
+#     identity_provider_config_name = "example"
+#     issuer_url                    = "your issuer_url"
+#   }
+# }
+
+output "test" {
+  value = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
