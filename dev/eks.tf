@@ -48,7 +48,7 @@ resource "aws_eks_node_group" "eks_node_group" {
 
   node_group_name = "${var.project_env}_normal_node_group"
 
-  subnet_ids = [aws_subnet.k8s_subnet[*].id]
+  subnet_ids = aws_subnet.k8s_subnet[*].id
 
   instance_types = ["t3.micro"]
 
