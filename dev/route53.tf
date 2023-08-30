@@ -1,5 +1,5 @@
 resource "aws_route53_zone" "primary" {
-  name = "https://${var.ourdomain}"
+  name = "${var.ourdomain}"
 }
 
 resource "aws_acm_certificate" "cert" {
