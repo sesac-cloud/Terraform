@@ -6,7 +6,7 @@ variable "project_env" {
   default = "dev"
 }
 
-variable "domain" {}
+variable "ourdomain" {}
 variable "ovpnpw" {}
 variable "ovpnuser" {}
 variable "mqpw" {}
