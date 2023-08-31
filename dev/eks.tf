@@ -75,7 +75,9 @@ resource "aws_eks_cluster" "eks_cluster" {
     security_group_ids      = [aws_security_group.eks_node_group_sg.id]
     endpoint_private_access = true
   }
-
+  kubernetes_network_config {
+    service_ipv4_cidr = "172.16.2.0/23"
+  }
   depends_on = [
     aws_iam_role_policy_attachment.eks_cluster_policy
   ]
