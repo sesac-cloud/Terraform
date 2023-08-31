@@ -10,3 +10,11 @@ resource "aws_acm_certificate" "cert" {
     create_before_destroy = true
   }
 }
+
+resource "aws_route53_record" "ovpn_route" {
+  zone_id = var.route53zoneid
+  name    = "ovpn.jecheolso.site"
+  type    = "A"
+  ttl     = 300
+  records = [aws_instance.instance_c.public_ip]
+}

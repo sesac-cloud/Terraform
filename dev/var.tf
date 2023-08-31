@@ -18,3 +18,4 @@ variable "dbpw" {}
 variable "dbuser" {}
 variable "keypair" {}
 variable "oidcclient" {}
+variable "route53zoneid" {}
