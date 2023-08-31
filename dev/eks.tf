@@ -101,4 +101,13 @@ resource "aws_security_group" "eks_node_group_sg" {
   tags = local.resource_tags
 }
 
+data "external" "thumbprint" {
+  program = [format("${path.module}/get_thumbprint.sh"), data.aws_region.current.name]
+}
+
+resource "aws_iam_openid_connect_provider" "iamoidc" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.external.thumbprint.result.thumbprint]
+  url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
+}
 
