@@ -1,7 +1,7 @@
 locals {
   use_az = [
     "${var.use_region}a",
-    "${var.use_region}b"
+    "${var.use_region}c"
   ]
 }
 
