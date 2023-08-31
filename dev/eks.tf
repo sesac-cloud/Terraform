@@ -100,6 +100,8 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
   tags = local.resource_tags
 }
+data "aws_region" "current" {
+}
 
 data "external" "thumbprint" {
   program = [format("${path.module}/get_thumbprint.sh"), data.aws_region.current.name]
