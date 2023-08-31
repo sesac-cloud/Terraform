@@ -104,7 +104,7 @@ data "aws_region" "current" {
 }
 
 data "external" "thumbprint" {
-  program = [format("${path.module}/get_thumbprint.sh"), data.aws_region.current.name]
+  program = ["${path.module}/get_thumbprint.sh", data.aws_region.current.name]
 }
 
 resource "aws_iam_openid_connect_provider" "iamoidc" {
