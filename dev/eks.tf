@@ -101,13 +101,4 @@ resource "aws_security_group" "eks_node_group_sg" {
   tags = local.resource_tags
 }
 
-resource "aws_eks_identity_provider_config" "oidc_config" {
-  cluster_name = aws_eks_cluster.eks_cluster.name
-
-  oidc {
-    client_id                     = var.oidcclient
-    identity_provider_config_name = "${var.project_env}_oidc"
-    issuer_url                    = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
-  }
-}
 
