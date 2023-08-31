@@ -27,7 +27,7 @@ resource "aws_security_group" "dbsg" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
-    cidr_blocks = ["172.16.0.0/23"]
+    cidr_blocks = ["172.16.0.0/22"]
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
