@@ -5,6 +5,9 @@ variable "use_region" {
 variable "project_env" {
   default = "dev"
 }
+variable "eksinstance" {
+  default = "t3.small"
+}
 
 variable "ourdomain" {}
 variable "ovpnpw" {}
