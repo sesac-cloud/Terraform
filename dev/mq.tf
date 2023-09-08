@@ -11,7 +11,7 @@ resource "aws_security_group" "mq_sg" {
     }
 
     content {
-      cidr_blocks = ["172.16.0.0/23"]
+      cidr_blocks = ["172.16.0.0/16"]
       from_port   = ingress.value
       to_port     = ingress.value
       protocol    = "tcp"

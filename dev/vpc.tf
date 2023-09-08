@@ -60,3 +60,14 @@ resource "aws_nat_gateway" "nat_gw" {
 resource "aws_eip" "nat_eip" {
   tags = local.resource_tags
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.vpc.id
+  service_name = "com.amazonaws.${var.use_region}.s3"
+}
+
+resource "aws_vpc_endpoint_route_table_association" "s3vpcendpoint_assoication" {
+  count           = 2
+  route_table_id  = aws_route_table.k8s_route_table[count.index].id
+  vpc_endpoint_id = aws_vpc_endpoint.s3.id
+}

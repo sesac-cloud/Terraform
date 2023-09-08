@@ -1,12 +1,3 @@
-data "aws_ami" "ovpn" {
-  most_recent = true
-
-
-  filter {
-    name   = "name"
-    values = ["*OpenVPN Access Server*"]
-  }
-}
 
 resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
@@ -15,17 +6,17 @@ resource "aws_security_group" "bastion_sg" {
 
   dynamic "ingress" {
     for_each = {
-      ovpn = 1194
-      # ssh   = 22
-      other = 943
-      https = 443
+      1194 = "udp"
+      22   = "tcp"
+      943  = "tcp"
+      443  = "tcp"
     }
     content {
       cidr_blocks = ["0.0.0.0/0"]
-      from_port   = ingress.value
-      to_port     = ingress.value
-      protocol    = "tcp"
-      description = ingress.key
+      from_port   = ingress.key
+      to_port     = ingress.key
+      protocol    = ingress.value
+      description = ingress.value
     }
   }
 
