@@ -34,14 +34,6 @@ resource "aws_iam_role" "eks_node_group_role" {
 }
 
 
-data "aws_ssm_parameter" "eks_ami_release_version" {
-  name = "/aws/service/eks/optimized-ami/${aws_eks_cluster.eks_cluster.version}/amazon-linux-2/recommended/release_version"
-}
-//gpu 버전 ami
-# data "aws_ssm_parameter" "eks_gpu_ami_release_version" {
-#   name = "/aws/service/eks/optimized-ami/${aws_eks_cluster.eks_cluster.version}/amazon-linux-2-gpu/recommended/release_version"
-# }
-
 resource "aws_eks_node_group" "eks_node_group" {
 
   cluster_name = aws_eks_cluster.eks_cluster.name
@@ -64,6 +56,29 @@ resource "aws_eks_node_group" "eks_node_group" {
 
 }
 
+resource "aws_eks_node_group" "eks_node_gpu_group" {
+
+
+  cluster_name = aws_eks_cluster.eks_cluster.name
+
+  node_group_name = "${var.project_env}_gpu_node_group"
+
+  subnet_ids = aws_subnet.k8s_subnet[*].id
+
+  instance_types = ["p3.2xlarge"]
+
+  ami_type        = "AL2_x86_64_GPU"
+  release_version = nonsensitive(data.aws_ssm_parameter.eks_gpu_ami_release_version.value)
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
+  }
+  disk_size = 50
+
+  node_role_arn = aws_iam_role.eks_node_group_role.arn
+
+}
 
 resource "aws_eks_cluster" "eks_cluster" {
   name     = "${var.project_env}_eks_cluster"
@@ -100,16 +115,10 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
   tags = local.resource_tags
 }
-data "aws_region" "current" {
-}
 
-data "external" "thumbprint" {
-  program = ["sh", "${path.module}/get_thumbprint.sh", data.aws_region.current.name]
-}
 
 resource "aws_iam_openid_connect_provider" "iamoidc" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.external.thumbprint.result.thumbprint]
   url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
 }
-

@@ -18,3 +18,20 @@ resource "aws_route53_record" "ovpn_route" {
   ttl     = 300
   records = [aws_instance.instance_c.public_ip]
 }
+
+module "us_acm" {
+  source    = "./usacm"
+  ourdomain = var.ourdomain
+}
+
+resource "aws_route53_record" "cdn_a" {
+  zone_id = var.route53zoneid
+  name    = "cdn.${var.ourdomain}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.cdn_distribution.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
