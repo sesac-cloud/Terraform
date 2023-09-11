@@ -29,25 +29,25 @@ resource "aws_s3_bucket_policy" "cdn_allow" {
                     "StringEquals": {
                       "AWS:SourceArn": "${var.cdn_arn}"
                     }
-          }}
+          }}  ,
+            {
+      "Sid": "Access-to-specific-VPCE-only",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:PutObject",
+      "Resource":  "arn:aws:s3:::${aws_s3_bucket.appbucket.bucket}/*",
+      "Condition": {
+        "StringNotEquals": {
+          "aws:sourceVpce": "${var.s3_endpoint}"
+        }
+      }
+    }
   
     ]
 }
 
 EOF
-      #   ,
-    #         {
-    #   "Sid": "Access-to-specific-VPCE-only",
-    #   "Effect": "Deny",
-    #   "Principal": "*",
-    #   "Action": "s3:PutObject",
-    #   "Resource":  "arn:aws:s3:::${aws_s3_bucket.appbucket.bucket}/*",
-    #   "Condition": {
-    #     "StringNotEquals": {
-    #       "aws:sourceVpce": "${aws_vpc_endpoint.s3.id}"
-    #     }
-    #   }
-    # }
+      
 
 }
 

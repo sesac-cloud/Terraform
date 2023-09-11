@@ -1,0 +1,1 @@
+variable "count_num" {}

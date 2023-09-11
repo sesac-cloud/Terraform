@@ -8,9 +8,16 @@ output "vpcid" {
   value = aws_vpc.vpc.id
 }
 
+module "vpc" {
+  source = "./module/vpc"
+    count_num = 4
+
+}
+
 module "s3" {
   source           = "./module/s3"
   cdn_arn = module.cloudfront.cdn_arn
+  s3_endpoint = module.vpc.s3_endpoint
   project_env      = var.project_env
 
 }
