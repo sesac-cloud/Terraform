@@ -27,7 +27,7 @@ resource "aws_s3_bucket_policy" "cdn_allow" {
                 "Resource": "arn:aws:s3:::${aws_s3_bucket.appbucket.bucket}/converted/*",
                 "Condition": {
                     "StringEquals": {
-                      "AWS:SourceArn": "${var.cdn_distribution}"
+                      "AWS:SourceArn": "${var.cdn_arn}"
                     }
           }}
   

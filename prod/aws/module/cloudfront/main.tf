@@ -1,7 +1,7 @@
 
 
 resource "aws_cloudfront_origin_access_control" "cdn_origin_access_control" {
-  name = "cdnorigin"
+  name = "${projet_env}-cdnorigin"
   # description                       = "Example Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "cdn_distribution" {
 
 
   # Alias of cloudfront distribution
-  # aliases = ["cdn.${var.ourdomain}"]
+  aliases = ["cdn.${var.ourdomain}"]
 
   # Default Cache behavior 
   default_cache_behavior {
@@ -37,8 +37,7 @@ resource "aws_cloudfront_distribution" "cdn_distribution" {
 
 
 
-    viewer_protocol_policy = "allow-all"
-    //"redirect-to-https"
+    viewer_protocol_policy = "redirect-to-https"
 
   }
 
@@ -51,10 +50,10 @@ resource "aws_cloudfront_distribution" "cdn_distribution" {
 
   # Certification Settings 
   viewer_certificate {
-    cloudfront_default_certificate = true
-    # acm_certificate_arn      = module.us_acm.cdn_acm_arn
-    # minimum_protocol_version = "TLSv1.1_2016"
-    # ssl_support_method       = "sni-only"
+    #cloudfront_default_certificate = true
+    acm_certificate_arn      = var.cdn_arn
+    minimum_protocol_version = "TLSv1.1_2016"
+    ssl_support_method       = "sni-only"
   }
 
   # Cloudfront Logging Settings
