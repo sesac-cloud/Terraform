@@ -11,7 +11,7 @@ output "vpcid" {
 module "s3" {
   source           = "./module/s3"
   cdn_arn = module.cloudfront.cdn_arn
-  project_env      = "prod"
+  project_env      = var.project_env
 
 }
 module "cloudfront" {
@@ -25,4 +25,5 @@ module "route53" {
   ourdomain  = var.ourdomain
   cdn_domain = module.cloudfront.cdn_domain
   route53zoneid = var.route53zoneid
+  project_env = var.project_env
 }
