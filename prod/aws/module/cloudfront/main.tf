@@ -1,7 +1,7 @@
 
 
 resource "aws_cloudfront_origin_access_control" "cdn_origin_access_control" {
-  name = "${projet_env}-cdnorigin"
+  name = "${var.project_env}-cdnorigin"
   # description                       = "Example Policy"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"

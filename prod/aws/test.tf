@@ -19,13 +19,14 @@ module "cloudfront" {
   s3domain  = module.s3.appbucket_domain_name
   cdn_arn   = module.route53.us_1_cert_arn
   ourdomain = var.ourdomain
+  project_env = var.project_env
+
 }
 module "route53" {
   source     = "./module/route53"
   ourdomain  = var.ourdomain
   cdn_domain = module.cloudfront.cdn_domain
   route53zoneid = var.route53zoneid
-  project_env = var.project_env
 }
 
 resource "aws_ecr_repository" "ecr_repo" {
