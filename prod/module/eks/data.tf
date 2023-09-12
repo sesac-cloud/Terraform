@@ -10,3 +10,5 @@ data "aws_ssm_parameter" "eks_gpu_ami_release_version" {
 data "external" "thumbprint" {
   program = ["sh", "${path.module}/get_thumbprint.sh", data.aws_region.current.name]
 }
+
+data "aws_region" "current" {}

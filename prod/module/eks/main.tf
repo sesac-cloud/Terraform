@@ -4,7 +4,7 @@ resource "aws_eks_node_group" "eks_node_group" {
 
   node_group_name = "${var.project_env}_app_node_group"
 
-  subnet_ids = aws_subnet.k8s_subnet[*].id
+  subnet_ids = var.k8s_subnet[*].id
 
   instance_types = [var.node_instance]
 
@@ -27,7 +27,7 @@ resource "aws_eks_node_group" "eks_node_gpu_group" {
 
   node_group_name = "${var.project_env}_gpu_node_group"
 
-  subnet_ids = aws_subnet.k8s_subnet[*].id
+  subnet_ids = var.k8s_subnet[*].id
 
   instance_types = ["g5.xlarge"]
 
@@ -50,7 +50,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   version  = "1.27"
 
   vpc_config {
-    subnet_ids              = aws_subnet.k8s_subnet[*].id
+    subnet_ids              = var.k8s_subnet[*].id
     security_group_ids      = [aws_security_group.eks_node_group_sg.id]
     endpoint_private_access = true
   }
@@ -60,7 +60,7 @@ resource "aws_eks_cluster" "eks_cluster" {
   ]
 
 
-
+}
 
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.project_env}_eks_cluster_role"
@@ -99,7 +99,7 @@ resource "aws_iam_role" "eks_node_group_role" {
 
 
 
-}
+
 
 resource "aws_security_group" "eks_node_group_sg" {
   name        = "node-group-sg"
@@ -174,7 +174,7 @@ resource "aws_iam_role_policy" "eks_for_route53_policy" {
 }
 
 
-resource "aws_iam_role_policy" "abl_controller_policy" {
+resource "aws_iam_role_policy" "alc_controller_policy" {
   name = "${var.project_env}_EKSALBCPolicy"
   role = aws_iam_role.eks_node_group_role.id
   policy = jsonencode(

@@ -11,27 +11,35 @@ resource "aws_acm_certificate" "cert" {
   }
 }
 
-# resource "aws_route53_record" "ovpn_route" {
-#   zone_id = var.route53zoneid
-#   name    = "ovpn.${var.ourdomain}"
-#   type    = "A"
-#   ttl     = 300
-#   records = [aws_instance.instance_c.public_ip]
+
+
+# module "us_acm" {
+#   source    = "../usacm"
+#   ourdomain = var.ourdomain
 # }
 
-module "us_acm" {
-  source    = "../usacm"
-  ourdomain = var.ourdomain
-}
+# resource "aws_route53_record" "cdn_a" {
+#   zone_id = var.route53zoneid
+#   name    = "cdn.${var.ourdomain}"
+#   type    = "A"
 
-resource "aws_route53_record" "cdn_a" {
+#   alias {
+#     name                   = var.cdn_domain
+#     zone_id                = "Z2FDTNDATAQYW2"
+#     evaluate_target_health = false
+#   }
+# }
+
+
+resource "aws_route53_record" "ovpn_route" {
   zone_id = var.route53zoneid
-  name    = "cdn.${var.ourdomain}"
+  name    = "ovpn.${var.ourdomain}"
   type    = "A"
 
   alias {
-    name                   = var.cdn_domain
-    zone_id                = "Z2FDTNDATAQYW2"
+    name = var.bastion_lb_dns
+    zone_id = var.lb_zone_id
     evaluate_target_health = false
+    
   }
 }

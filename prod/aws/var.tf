@@ -6,3 +6,6 @@ variable "mqpw" {}
 variable "node_instance" {}
 variable "dbuser" {}
 variable "dbpw" {}
+variable "ovpnpw" {}
+variable "ovpnuser" {}
+variable "keypair" {}
