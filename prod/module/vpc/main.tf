@@ -41,6 +41,18 @@ resource "aws_subnet" "db_subnet" {
 
 }
 
+resource "aws_subnet" "mq_subnet" {
+  count             = var.count_num
+  vpc_id            = aws_vpc.vpc.id
+  availability_zone = local.use_az[count.index]
+  cidr_block        = "172.16.${count.index + (var.count_num*3)}.0/24"
+#   tags = {
+#     ProjectEnv = var.project_env
+#     az         = local.use_az[count.index]
+#   }
+
+}
+
 #internet gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
@@ -113,7 +125,16 @@ resource "aws_route_table" "db_route_table" {
   }
  // tags = local.resource_tags
 }
-
+resource "aws_route_table" "mq_route_table" {
+  count  = var.count_num
+  vpc_id = aws_vpc.vpc.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gw.id
+ //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+  }
+ // tags = local.resource_tags
+}
 #route_table_association
 resource "aws_route_table_association" "bastion_subnet_route" {
   count          = var.count_num
@@ -132,4 +153,9 @@ resource "aws_route_table_association" "db_route_table" {
   count          = var.count_num
   subnet_id      = aws_subnet.db_subnet[count.index].id
   route_table_id = aws_route_table.db_route_table[count.index].id
+}
+resource "aws_route_table_association" "mq_route_table" {
+  count          = var.count_num
+  subnet_id      = aws_subnet.mq_subnet[count.index].id
+  route_table_id = aws_route_table.mq_route_table[count.index].id
 }
