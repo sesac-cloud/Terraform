@@ -51,3 +51,12 @@ module "mq" {
   mquser = var.mquser
   project_env = var.project_env
 }
+
+module "eks" {
+  source = "../module/eks"
+  project_env = var.project_env
+  vpc_cidr = module.vpc.vpc_cidr
+  vpc_id = module.vpc.vpc_id
+  node_instance = var.node_instance
+  k8s_subnet = module.vpc.k8s_subnet
+}
