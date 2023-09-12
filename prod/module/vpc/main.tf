@@ -1,7 +1,7 @@
 
 resource "aws_vpc" "vpc" {
   cidr_block = "172.16.0.0/16"
- // tags       = local.resource_tags
+  // tags       = local.resource_tags
 }
 
 
@@ -11,10 +11,10 @@ resource "aws_subnet" "bastion_subnet" {
   availability_zone = local.use_az[count.index]
   cidr_block        = "172.16.${count.index}.0/24"
 
-#   tags = {
-#     ProjectEnv = var.project_env
-#     az         = local.use_az[count.index]
-#   }
+  #   tags = {
+  #     ProjectEnv = var.project_env
+  #     az         = local.use_az[count.index]
+  #   }
 
 }
 
@@ -23,21 +23,21 @@ resource "aws_subnet" "k8s_subnet" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.use_az[count.index]
   cidr_block        = "172.16.${count.index + var.count_num}.0/24"
-#   tags = {
-#     ProjectEnv = var.project_env
-#     az         = local.use_az[count.index]
-#   }
+  #   tags = {
+  #     ProjectEnv = var.project_env
+  #     az         = local.use_az[count.index]
+  #   }
 }
 
 resource "aws_subnet" "db_subnet" {
   count             = var.count_num
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.use_az[count.index]
-  cidr_block        = "172.16.${count.index + (var.count_num*2)}.0/24"
-#   tags = {
-#     ProjectEnv = var.project_env
-#     az         = local.use_az[count.index]
-#   }
+  cidr_block        = "172.16.${count.index + (var.count_num * 2)}.0/24"
+  #   tags = {
+  #     ProjectEnv = var.project_env
+  #     az         = local.use_az[count.index]
+  #   }
 
 }
 
@@ -45,18 +45,18 @@ resource "aws_subnet" "mq_subnet" {
   count             = var.count_num
   vpc_id            = aws_vpc.vpc.id
   availability_zone = local.use_az[count.index]
-  cidr_block        = "172.16.${count.index + (var.count_num*3)}.0/24"
-#   tags = {
-#     ProjectEnv = var.project_env
-#     az         = local.use_az[count.index]
-#   }
+  cidr_block        = "172.16.${count.index + (var.count_num * 3)}.0/24"
+  #   tags = {
+  #     ProjectEnv = var.project_env
+  #     az         = local.use_az[count.index]
+  #   }
 
 }
 
 #internet gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
-//  tags   = local.resource_tags
+  //  tags   = local.resource_tags
 }
 
 
@@ -66,7 +66,7 @@ resource "aws_nat_gateway" "nat_gw" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.bastion_subnet[0].id
   depends_on    = [aws_internet_gateway.igw]
- // tags          = local.resource_tags
+  // tags          = local.resource_tags
 }
 
 # resource "aws_nat_gateway" "nat_gw" {
@@ -78,8 +78,8 @@ resource "aws_nat_gateway" "nat_gw" {
 # }
 
 resource "aws_eip" "nat_eip" {
-//    count = var.count_num
- // tags = local.resource_tags
+  //    count = var.count_num
+  // tags = local.resource_tags
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -101,7 +101,7 @@ resource "aws_route_table" "bastion_route_table" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
- // tags = local.resource_tags
+  // tags = local.resource_tags
 }
 
 resource "aws_route_table" "k8s_route_table" {
@@ -112,7 +112,7 @@ resource "aws_route_table" "k8s_route_table" {
     nat_gateway_id = aws_nat_gateway.nat_gw.id
     //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
- // tags = local.resource_tags
+  // tags = local.resource_tags
 }
 
 resource "aws_route_table" "db_route_table" {
@@ -121,9 +121,9 @@ resource "aws_route_table" "db_route_table" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
- //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+    //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
- // tags = local.resource_tags
+  // tags = local.resource_tags
 }
 resource "aws_route_table" "mq_route_table" {
   count  = var.count_num
@@ -131,9 +131,9 @@ resource "aws_route_table" "mq_route_table" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
- //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+    //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
- // tags = local.resource_tags
+  // tags = local.resource_tags
 }
 #route_table_association
 resource "aws_route_table_association" "bastion_subnet_route" {

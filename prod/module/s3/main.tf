@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "appbucket" {
 
 
 
-//  tags = local.resource_tags
+  //  tags = local.resource_tags
 }
 
 
@@ -47,7 +47,7 @@ resource "aws_s3_bucket_policy" "cdn_allow" {
 }
 
 EOF
-      
+
 
 }
 
@@ -56,20 +56,20 @@ resource "aws_s3_bucket_lifecycle_configuration" "originDeleteRule" {
   dynamic "rule" {
     for_each = {
       "OriginDelRule" = "orgin/"
-      "MaskDelRule"  = "mask/"
+      "MaskDelRule"   = "mask/"
     }
 
     content {
-    id = rule.key
+      id = rule.key
 
-    filter {
-      prefix = rule.value
-    }
-    expiration {
-      days = 5
-    }
+      filter {
+        prefix = rule.value
+      }
+      expiration {
+        days = 5
+      }
 
-    status = "Enabled"
+      status = "Enabled"
     }
 
   }

@@ -26,7 +26,7 @@ resource "aws_security_group" "bastion_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
- // tags = local.resource_tags
+  // tags = local.resource_tags
 }
 
 # resource "aws_instance" "ovpn_instance" {
@@ -53,7 +53,7 @@ resource "aws_security_group" "bastion_sg" {
 # }
 
 resource "aws_instance" "ovpn_instance" {
-count = var.count_num
+  count      = var.count_num
   depends_on = [aws_key_pair.keypair]
 
   ami           = data.aws_ami.ovpn.image_id
@@ -74,27 +74,27 @@ admin_pw=${var.ovpnpw}
 EOF
 
 
-//  tags = local.resource_tags
+  //  tags = local.resource_tags
 }
 
 resource "aws_key_pair" "keypair" {
   key_name   = "${var.project_env}-key"
   public_key = var.keypair
- // tags       = local.resource_tags
+  // tags       = local.resource_tags
 }
 ///////////////////////
 // lb /////
 ///////////////////////
 
 resource "aws_security_group" "bastion_lb_sg" {
-  name = "bastion-lb-sg"
+  name        = "bastion-lb-sg"
   description = "Allow all HTTP"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = {
       80  = "tcp"
-      443  = "tcp"
+      443 = "tcp"
       943 = "tcp"
     }
     content {
@@ -106,7 +106,7 @@ resource "aws_security_group" "bastion_lb_sg" {
     }
   }
 
-    egress {
+  egress {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
@@ -122,15 +122,15 @@ resource "aws_lb_target_group" "bastion_lb_tg" {
   vpc_id   = var.vpc_id
   health_check {
     path = "/?src=connect"
-  }  
-   stickiness {
-    type =   "lb_cookie"
+  }
+  stickiness {
+    type            = "lb_cookie"
     cookie_duration = 180
-   }
+  }
 }
 
 resource "aws_lb_target_group_attachment" "tg-attach" {
-    count = var.count_num
+  count            = var.count_num
   target_group_arn = aws_lb_target_group.bastion_lb_tg.arn
   target_id        = aws_instance.ovpn_instance[count.index].id
   port             = 443
@@ -138,7 +138,7 @@ resource "aws_lb_target_group_attachment" "tg-attach" {
 
 
 resource "aws_lb" "alb" {
-  name               = "bastion-alb"
+  name = "bastion-alb"
 
   load_balancer_type = "application"
   security_groups    = [aws_security_group.bastion_lb_sg.id]
@@ -150,13 +150,13 @@ resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn = var.cert_arn
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = var.cert_arn
 
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.bastion_lb_tg.arn
-      }
+  }
 }
 
 resource "aws_lb_listener" "http_listener" {
