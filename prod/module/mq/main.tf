@@ -2,7 +2,7 @@
 resource "aws_security_group" "mq_sg" {
   name        = "mq-sg"
   description = "Allow for mq"
-  vpc_id      = var.vpc.id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = {
@@ -37,7 +37,7 @@ resource "aws_mq_broker" "mq_borker" {
 
   deployment_mode     = "CLUSTER_MULTI_AZ"
   publicly_accessible = false
-  subnet_ids          = [var.mq_subnet[*].id]
+  subnet_ids          = var.mq_subnet[*].id
 
   user {
     username = var.mquser

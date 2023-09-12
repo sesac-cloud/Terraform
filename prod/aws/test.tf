@@ -42,6 +42,15 @@ resource "aws_ecr_repository" "ecr_repo" {
  // tags         = local.resource_tags
   force_delete = true
 }
+module "rds_cluster" {
+  source = "../module/rds"
+  dbpw = var.dbpw
+  dbuser = var.dbuser
+  db_subnet = module.vpc.db_subnet
+  project_env = var.project_env
+  vpc_id = module.vpc.vpc_id
+  
+}
 
 module "mq" {
   source = "../module/mq"
@@ -52,11 +61,12 @@ module "mq" {
   project_env = var.project_env
 }
 
-module "eks" {
-  source = "../module/eks"
-  project_env = var.project_env
-  vpc_cidr = module.vpc.vpc_cidr
-  vpc_id = module.vpc.vpc_id
-  node_instance = var.node_instance
-  k8s_subnet = module.vpc.k8s_subnet
-}
+# module "eks" {
+#   source = "../module/eks"
+#   project_env = var.project_env
+#   vpc_cidr = module.vpc.vpc_cidr
+#   vpc_id = module.vpc.vpc_id
+#   node_instance = var.node_instance
+#   k8s_subnet = module.vpc.k8s_subnet
+# }
+

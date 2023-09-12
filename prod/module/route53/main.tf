@@ -20,7 +20,7 @@ resource "aws_acm_certificate" "cert" {
 # }
 
 module "us_acm" {
-  source    = "./usacm"
+  source    = "../usacm"
   ourdomain = var.ourdomain
 }
 
