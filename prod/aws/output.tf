@@ -25,7 +25,12 @@ output "bastion_subnet" {
 output "vpccidr" {
   value = module.vpc.vpc_cidr
 }
-
+output "current_region" {
+  value = data.aws_region.current
+}
+output "eks_asg_name" {
+  value = module.eks.eks_asg_name
+}
 //////////////////////////////////////////////////
 /////////////     For EKS       //////////////////
 //////////////////////////////////////////////////

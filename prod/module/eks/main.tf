@@ -422,3 +422,19 @@ resource "aws_iam_role_policy" "alc_controller_policy" {
     }
   )
 }
+
+module "cluster_autoscaler_irsa_role" {
+
+  source = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+
+  role_name                        = "cluster-autoscaler"
+  attach_cluster_autoscaler_policy = true
+  cluster_autoscaler_cluster_names = [aws_eks_cluster.eks_cluster.name]
+
+  oidc_providers = {
+    main = {
+      provider_arn               = aws_iam_openid_connect_provider.iamoidc.arn
+      namespace_service_accounts = ["kube-system:cluster-autoscaler"]
+    }
+  }
+}
