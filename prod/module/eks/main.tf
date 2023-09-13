@@ -121,20 +121,22 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
   // tags = local.resource_tags
 }
-
-
-resource "aws_autoscaling_policy" "scail" {
-  for_each {
-    upscail   = 1
-    downscail = -1
-  }
+resource "aws_autoscaling_policy" "upscail" {
   autoscaling_group_name = aws_eks_node_group.eks_node_gpu_group .resources[0].autoscaling_groups[0].name
-
-  name                   = each.key
-  cooldown               = 180
-  scaling_adjustment     = each.value
-  adjustment_type        = "ChangeInCapacity"
+  name                   = "upscail"
+  cooldown              = 180
+  adjustment_type = "ChangeInCapacity"
+  scaling_adjustment   =    1
 }
+resource "aws_autoscaling_policy" "downscail" {
+  autoscaling_group_name = aws_eks_node_group.eks_node_gpu_group .resources[0].autoscaling_groups[0].name
+  name                   = "downscail"
+  cooldown              = 180
+  adjustment_type = "ChangeInCapacity"
+  scaling_adjustment   =    -1
+}
+
+
 
 
 resource "aws_cloudwatch_metric_alarm" "mqalarm_up" {
@@ -152,7 +154,7 @@ resource "aws_cloudwatch_metric_alarm" "mqalarm_up" {
     VirtualHost = "/"
     Queue = "mix"    
   }
-  alarm_actions = [aws_autoscaling_policy.scail[0].arn]
+  alarm_actions = [aws_autoscaling_policy.upscail.arn]
 }
 
 
@@ -171,7 +173,7 @@ resource "aws_cloudwatch_metric_alarm" "mqalarm_down" {
     VirtualHost = "/"
     Queue = "mix"    
   }
-  alarm_actions = [aws_autoscaling_policy.scail[1].arn]
+  alarm_actions = [aws_autoscaling_policy.downscail.arn]
 }
 
 
