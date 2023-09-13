@@ -1,9 +1,4 @@
-# locals {
-#   use_az = [
-#     "${var.use_region}a",
-#     "${var.use_region}c"
-#   ]
-# }
+
 
 locals {
   resource_tags = {
@@ -23,6 +18,3 @@ locals {
 
 
 
-# locals {
-#   account_id = data.aws_caller_identity.current.account_id
-# }

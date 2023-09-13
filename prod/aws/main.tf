@@ -10,7 +10,7 @@ output "vpcid" {
 
 module "vpc" {
   source    = "../module/vpc"
-  count_num = 4
+  count_num = 3
 
 }
 
@@ -41,7 +41,7 @@ module "route53" {
 
 module "bastion" {
   source         = "../module/bastion"
-  count_num      = 4
+  count_num      = 3
   bastion_subnet = module.vpc.bastion_subnet
   ovpnuser       = var.ovpnuser
   ovpnpw         = var.ovpnpw
