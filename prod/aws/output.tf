@@ -34,6 +34,9 @@ output "eks_asg_name" {
 output "irsa_role" {
   value = module.eks.irsa_role  
 }
+output "aws_user_id"{
+value = data.aws_caller_identity.current.account_id
+}
 //////////////////////////////////////////////////
 /////////////     For EKS       //////////////////
 //////////////////////////////////////////////////
