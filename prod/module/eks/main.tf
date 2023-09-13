@@ -11,9 +11,9 @@ resource "aws_eks_node_group" "eks_node_group" {
   release_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   scaling_config {
-    desired_size = 2
-    max_size     = 5
-    min_size     = 2
+    desired_size = 3
+    max_size     = 6
+    min_size     = 3
   }
 
   node_role_arn = aws_iam_role.eks_node_group_role.arn
@@ -121,6 +121,71 @@ resource "aws_security_group" "eks_node_group_sg" {
   }
   // tags = local.resource_tags
 }
+
+
+resource "aws_autoscaling_policy" "scail" {
+  for_each {
+    upscail   = 1
+    downscail = -1
+  }
+  autoscaling_group_name = aws_eks_node_group.eks_node_gpu_group .resources[0].autoscaling_groups[0].name
+
+  name                   = for_each.key
+  cooldown               = 180
+  scaling_adjustment     = for_each.value
+  adjustment_type        = "ChangeInCapacity"
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "mqalarm_up" {
+  alarm_name                = "mqalarmup"
+  comparison_operator       = "GreaterThanThreshold"
+  evaluation_periods        = 1
+  metric_name               = "MessageCount"
+  namespace                 = "AWS/AmazonMQ"
+  period                    = 60
+  threshold                 = 10
+  statistic                 = "Average"
+  alarm_description         = "for mq upscail"
+  dimensions = {
+    Broker = var.broker_name
+    VirtualHost = "/"
+    Queue = "mix"    
+  }
+  alarm_actions = [aws_autoscaling_policy.scail[0].arn]
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "mqalarm_down" {
+  alarm_name                = "mqalarmdown"
+  comparison_operator       = "LessThanThreshold"
+  evaluation_periods        = 1
+  metric_name               = "MessageCount"
+  namespace                 = "AWS/AmazonMQ"
+  period                    = 60
+  threshold                 = 5
+  statistic                 = "Average"
+  alarm_description         = "for mq downscail"
+  dimensions = {
+    Broker = var.broker_name
+    VirtualHost = "/"
+    Queue = "mix"    
+  }
+  alarm_actions = [aws_autoscaling_policy.downscai[1].arn]
+}
+
+
+# #    # "metrics": [
+# #   #     [ "AWS/AmazonMQ", "QueueCount", "Broker", "dev-broker", { "stat": "Maximum" } ]
+# #   # ],
+
+
+
+
+
+///////////////////
+/// policy ////////
+///////////////////
 
 
 resource "aws_iam_openid_connect_provider" "iamoidc" {

@@ -84,5 +84,6 @@ module "eks" {
   vpc_id        = module.vpc.vpc_id
   node_instance = var.node_instance
   k8s_subnet    = module.vpc.k8s_subnet
+  broker_name = module.mq.broker_name
 }
 
