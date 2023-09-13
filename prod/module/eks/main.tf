@@ -130,9 +130,9 @@ resource "aws_autoscaling_policy" "scail" {
   }
   autoscaling_group_name = aws_eks_node_group.eks_node_gpu_group .resources[0].autoscaling_groups[0].name
 
-  name                   = for_each.key
+  name                   = each.key
   cooldown               = 180
-  scaling_adjustment     = for_each.value
+  scaling_adjustment     = each.value
   adjustment_type        = "ChangeInCapacity"
 }
 
@@ -171,7 +171,7 @@ resource "aws_cloudwatch_metric_alarm" "mqalarm_down" {
     VirtualHost = "/"
     Queue = "mix"    
   }
-  alarm_actions = [aws_autoscaling_policy.downscai[1].arn]
+  alarm_actions = [aws_autoscaling_policy.scail[1].arn]
 }
 
 
