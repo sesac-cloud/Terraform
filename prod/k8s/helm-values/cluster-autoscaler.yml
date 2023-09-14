@@ -1,0 +1,10 @@
+autoscalingGroups:
+  - name: ${eks_asg_name}
+    minSize: 3
+    maxSize: 6
+awsRegion: ${region}
+rbac:
+  serviceAccount:
+    name: "cluster-autoscaler"
+    annotations:
+      eks.amazonaws.com/role-arn: ${role_arn}

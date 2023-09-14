@@ -1,0 +1,36 @@
+configs:
+  params:
+    server.insecure: true # Disable TLS
+redis-ha:
+  enabled: true
+controller:
+  replicas: 2
+server:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+  ingress:
+    hosts: ["argocd.${domain}"] 
+    enabled: true
+    https: false # Disable TLS
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/backend-protocol: HTTP
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443,"HTTP": 80}]'
+      alb.ingress.kubernetes.io/scheme: internet-facing
+    #  alb.ingress.kubernetes.io/scheme: internal
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/certificate-arn: ${tls_cert_arn}
+      alb.ingress.kubernetes.io/ssl-redirect: 443
+      alb.ingress.kubernetes.io/subnets: ${subnetlist}
+      alb.ingress.kubernetes.io/inbound-cidrs: ${vpccidr},112.172.128.1/32
+repoServer:
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+
+applicationSet:
+  replicas: 2
+
+
+

@@ -1,0 +1,8 @@
+targetSystem: "linux"
+datadog:
+  site: "ap1.datadoghq.com"
+  apiKey: ${apikey}
+  appKey: ${appkey}
+  logs:
+    enabled: true
+    containerCollectAll: true

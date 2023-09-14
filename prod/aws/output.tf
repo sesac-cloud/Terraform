@@ -20,7 +20,9 @@ output "cert_arn" {
 
 output "bastion_subnet" {
   value = join(",", tolist(module.vpc.bastion_subnet[*].id))
-
+}
+output "k8s_subnet" {
+  value = join(",", tolist(module.vpc.k8s_subnet[*].id))
 }
 output "vpccidr" {
   value = module.vpc.vpc_cidr
