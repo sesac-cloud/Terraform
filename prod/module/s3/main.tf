@@ -90,3 +90,29 @@ resource "aws_s3_bucket" "loging" {
   force_destroy = true
   //  tags = local.resource_tags
 }
+
+
+
+
+resource "aws_s3_bucket_policy" "log_allow" {
+  bucket = aws_s3_bucket.loging.id
+  policy = <<EOF
+
+ {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::600734575887:root"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.loging.bucket}}/*"
+        }
+    ]
+}
+
+EOF
+
+
+}
