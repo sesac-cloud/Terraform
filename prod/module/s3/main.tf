@@ -1,10 +1,6 @@
 resource "aws_s3_bucket" "appbucket" {
   bucket        = "${var.project_env}-sesac-app-bucket-2023"
   force_destroy = true
-
-
-
-
   //  tags = local.resource_tags
 }
 
@@ -86,4 +82,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "originDeleteRule" {
 
   #   status = "Enabled"
   # }
+}
+
+
+resource "aws_s3_bucket" "loging" {
+  bucket        = "${var.project_env}-sesac-logging-bucket-2023"
+  force_destroy = true
+  //  tags = local.resource_tags
 }
