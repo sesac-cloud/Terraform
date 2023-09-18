@@ -107,7 +107,7 @@ resource "aws_s3_bucket_policy" "log_allow" {
                 "AWS": "arn:aws:iam::600734575887:root"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::${aws_s3_bucket.loging.bucket}}/*"
+            "Resource": "arn:aws:s3:::${aws_s3_bucket.loging.bucket}/*"
         }
     ]
 }
