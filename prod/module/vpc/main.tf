@@ -62,23 +62,23 @@ resource "aws_internet_gateway" "igw" {
 
 
 #nat gw
-resource "aws_nat_gateway" "nat_gw" {
-  allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.bastion_subnet[0].id
-  depends_on    = [aws_internet_gateway.igw]
-  // tags          = local.resource_tags
-}
-
 # resource "aws_nat_gateway" "nat_gw" {
-#     count =var.count_num
-#   allocation_id = aws_eip.nat_eip[count.index].id
-#   subnet_id     = aws_subnet.bastion_subnet[count.index].id
+#   allocation_id = aws_eip.nat_eip.id
+#   subnet_id     = aws_subnet.bastion_subnet[0].id
 #   depends_on    = [aws_internet_gateway.igw]
-#  // tags          = local.resource_tags
+#   // tags          = local.resource_tags
 # }
 
+resource "aws_nat_gateway" "nat_gw" {
+    count =var.count_num
+  allocation_id = aws_eip.nat_eip[count.index].id
+  subnet_id     = aws_subnet.bastion_subnet[count.index].id
+  depends_on    = [aws_internet_gateway.igw]
+ // tags          = local.resource_tags
+}
+
 resource "aws_eip" "nat_eip" {
-  //    count = var.count_num
+      count = var.count_num
   // tags = local.resource_tags
 }
 
@@ -109,8 +109,8 @@ resource "aws_route_table" "k8s_route_table" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gw.id
-    //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+   // nat_gateway_id = aws_nat_gateway.nat_gw.id
+       nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
   // tags = local.resource_tags
 }
@@ -120,8 +120,8 @@ resource "aws_route_table" "db_route_table" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gw.id
-    //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+    //nat_gateway_id = aws_nat_gateway.nat_gw.id
+       nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
   // tags = local.resource_tags
 }
@@ -130,8 +130,8 @@ resource "aws_route_table" "mq_route_table" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gw.id
-    //   nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
+    //nat_gateway_id = aws_nat_gateway.nat_gw.id
+       nat_gateway_id = aws_nat_gateway.nat_gw[count.index].id
   }
   // tags = local.resource_tags
 }
