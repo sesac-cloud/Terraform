@@ -87,3 +87,13 @@ module "eks" {
   broker_name = module.mq.broker_name
 }
 
+resource "aws_cognito_user_pool" "pool" {
+  name = "snapdog-user-pool"
+  alias_attributes = ["preferred_username","email"]
+  admin_create_user_config  {
+    allow_admin_create_user_only = false
+  }
+  email_configuration  {
+    email_sending_account = "COGNITO_DEFAULT"
+  }
+}
